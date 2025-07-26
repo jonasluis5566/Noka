@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corra. Noka está vindo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            min-height: 100vh;
+            background-image: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1e9af0ae0bdb7738a62f29ac0bc53dac.jpg-aeQIBYkrckmEwUCJBkVOinBW5hMtYj.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: 'Courier New', monospace;
+            overflow-x: hidden;
+            color: white;
+            position: relative;
+        }
+        
+        /* Overlay escuro */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* Container principal */
+        .main-content {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        /* Título com efeito de sangue */
+        .bloody-title {
+            text-align: center;
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 50px 0 120px 0;
+            letter-spacing: 3px;
+            position: relative;
+            color: #8B0000;
+            text-shadow: 
+                0 0 10px #ff0000,
+                0 0 20px #ff0000,
+                2px 2px 0px #000,
+                -2px -2px 0px #000,
+                2px -2px 0px #000,
+                -2px 2px 0px #000;
+            filter: drop-shadow(0 0 10px #ff0000);
+            animation: textBlink 3s infinite;
+        }
+        
+        @keyframes textBlink {
+            0%, 90% { opacity: 1; }
+            95% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        
+        /* Sangue escorrendo */
+        .bloody-title::before {
+            content: '';
+            position: absolute;
+            top: 85%;
+            left: 15%;
+            width: 12px;
+            height: 60px;
+            background: linear-gradient(to bottom, 
+                #8B0000 0%, 
+                #A0522D 20%, 
+                #8B0000 40%, 
+                #654321 60%, 
+                #8B0000 80%, 
+                #4A0000 100%);
+            border-radius: 0 0 8px 8px;
+            box-shadow: 
+                inset 2px 0 4px rgba(0,0,0,0.5),
+                0 0 8px rgba(139,0,0,0.8);
+            animation: bloodDrip1 4s infinite ease-in-out;
+        }
+        
+        .bloody-title::after {
+            content: '';
+            position: absolute;
+            top: 85%;
+            right: 20%;
+            width: 8px;
+            height: 45px;
+            background: linear-gradient(to bottom, 
+                #8B0000 0%, 
+                #A0522D 30%, 
+                #8B0000 60%, 
+                #4A0000 100%);
+            border-radius: 0 0 6px 6px;
+            box-shadow: 
+                inset 1px 0 3px rgba(0,0,0,0.5),
+                0 0 6px rgba(139,0,0,0.6);
+            animation: bloodDrip2 3.5s infinite ease-in-out 1s;
+        }
+        
+        @keyframes bloodDrip1 {
+            0%, 30% { height: 0px; opacity: 0; }
+            50% { height: 30px; opacity: 0.8; }
+            70% { height: 60px; opacity: 1; }
+            100% { height: 60px; opacity: 0.9; }
+        }
+        
+        @keyframes bloodDrip2 {
+            0%, 40% { height: 0px; opacity: 0; }
+            60% { height: 25px; opacity: 0.7; }
+            80% { height: 45px; opacity: 1; }
+            100% { height: 45px; opacity: 0.8; }
+        }
+        
+        /* Container para as imagens */
+        .images-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 100px;
+        }
+        
+        .face-container {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #ff0000;
+            box-shadow: 
+                0 0 25px rgba(255, 0, 0, 0.8),
+                inset 0 0 25px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .face-container:hover {
+            transform: scale(1.15);
+            box-shadow: 
+                0 0 40px rgba(255, 0, 0, 1),
+                inset 0 0 40px rgba(0, 0, 0, 0.7);
+            border-color: #ffffff;
+        }
+        
+        .face-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            filter: contrast(1.2) brightness(0.9);
+            transition: filter 0.3s ease;
+        }
+        
+        .face-container:hover img {
+            filter: contrast(1.5) brightness(1.1) saturate(0.5);
+        }
+        
+        /* Partículas de fogo */
+        .fire-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, #ff4500 0%, #ff6347 50%, #ff0000 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 6px #ff4500;
+            animation: floatUp 4s infinite linear;
+        }
+        
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 3.5s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 0.5s; animation-duration: 4s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 1s; animation-duration: 3.8s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 1.5s; animation-duration: 4.2s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 2s; animation-duration: 3.6s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 2.5s; animation-duration: 4.1s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 3s; animation-duration: 3.9s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 3.5s; animation-duration: 4.3s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 4s; animation-duration: 3.7s; }
+        .particle:nth-child(10) { left: 15%; animation-delay: 0.8s; animation-duration: 4.5s; }
+        
+        @keyframes floatUp {
+            0% {
+                bottom: -10px;
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+            25% {
+                transform: translateX(10px) scale(1.2);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateX(-5px) scale(0.8);
+                opacity: 0.6;
+            }
+            75% {
+                transform: translateX(8px) scale(1.1);
+                opacity: 0.4;
+            }
+            100% {
+                bottom: 100vh;
+                opacity: 0;
+                transform: translateX(-3px) scale(0.5);
+            }
+        }
+        
+        /* BOTÃO DE JUMPSCARE */
+        .escape-button {
+            position: fixed;
+            bottom: 50px;
+            right: 50px;
+            background: linear-gradient(45deg, #8B0000, #DC143C, #FF0000);
+            color: white;
+            border: 3px solid #ff0000;
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 
+                0 0 20px rgba(255, 0, 0, 0.8),
+                inset 0 0 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 15;
+            animation: buttonPulse 2s infinite alternate;
+        }
+        
+        .escape-button:hover {
+            transform: scale(1.1);
+            background: linear-gradient(45deg, #DC143C, #FF0000, #FF4500);
+            box-shadow: 
+                0 0 30px rgba(255, 0, 0, 1),
+                inset 0 0 30px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 0 10px #ffffff;
+        }
+        
+        @keyframes buttonPulse {
+            0% {
+                box-shadow: 
+                    0 0 20px rgba(255, 0, 0, 0.8),
+                    inset 0 0 20px rgba(0, 0, 0, 0.3);
+            }
+            100% {
+                box-shadow: 
+                    0 0 40px rgba(255, 0, 0, 1),
+                    inset 0 0 40px rgba(0, 0, 0, 0.5);
+            }
+        }
+        
+        /* JUMPSCARE OVERLAY */
+        .jumpscare-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .jumpscare-image {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            object-position: center;
+            filter: contrast(2) brightness(1.5) saturate(0.5);
+            animation: jumpscareShake 0.5s infinite;
+        }
+        
+        @keyframes jumpscareShake {
+            0%, 100% { transform: translate(0, 0) scale(1.1); }
+            10% { transform: translate(-10px, -5px) scale(1.15); }
+            20% { transform: translate(10px, 5px) scale(1.05); }
+            30% { transform: translate(-5px, 10px) scale(1.2); }
+            40% { transform: translate(5px, -10px) scale(1.1); }
+            50% { transform: translate(-8px, 3px) scale(1.18); }
+            60% { transform: translate(8px, -3px) scale(1.08); }
+            70% { transform: translate(-3px, -8px) scale(1.12); }
+            80% { transform: translate(3px, 8px) scale(1.16); }
+            90% { transform: translate(-6px, -2px) scale(1.14); }
+        }
+        
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .bloody-title {
+                font-size: 2.5rem;
+                margin: 30px 0 80px 0;
+            }
+            
+            .face-container {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .escape-button {
+                bottom: 30px;
+                right: 30px;
+                padding: 12px 24px;
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .bloody-title {
+                font-size: 2rem;
+                margin: 20px 0 70px 0;
+            }
+            
+            .face-container {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .escape-button {
+                bottom: 20px;
+                right: 20px;
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .images-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .face-container {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    
+    <!-- Partículas de fogo -->
+    <div class="fire-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+    
+    <!-- Conteúdo principal -->
+    <div class="main-content">
+        <div class="bloody-title">
+            CORRA.<br>NOKA ESTÁ VINDO
+        </div>
+        
+        <div class="images-container">
+            <div class="face-container">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-07-25%20at%2020.11.17-ttAd7Qe3dquNvIS97BCThRaOPRvbHN.jpeg" alt="Face 1">
+            </div>
+            
+            <div class="face-container">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-07-25%20at%2020.12.08-RkqMoZDkLSyYPxuEBIrRSBGdLukujm.jpeg" alt="Face 2">
+            </div>
+            
+            <div class="face-container">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-07-25%20at%2020.13.55-ISL6EOyjpJmu6wdn1e4blQJ34EbfCl.jpeg" alt="Face 3">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Botão de Jumpscare -->
+    <button class="escape-button" onclick="triggerJumpscare()">
+        ESCAPE DA NOKA
+    </button>
+    
+    <!-- Jumpscare Overlay -->
+    <div class="jumpscare-overlay" id="jumpscareOverlay">
+        <img class="jumpscare-image" src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-07-25%20at%2020.11.17-ttAd7Qe3dquNvIS97BCThRaOPRvbHN.jpeg" alt="JUMPSCARE">
+    </div>
+    
+    <script>
+        // Função para criar um grito REAL de mulher
+        function createRealScream() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const sampleRate = audioContext.sampleRate;
+            const duration = 2.5; // 2.5 segundos
+            const buffer = audioContext.createBuffer(1, sampleRate * duration, sampleRate);
+            const data = buffer.getChannelData(0);
+            
+            for (let i = 0; i < buffer.length; i++) {
+                const t = i / sampleRate;
+                
+                // Frequência fundamental de voz feminina gritando (400-1200 Hz)
+                const baseFreq = 400 + Math.sin(t * 8) * 300 + Math.sin(t * 15) * 200;
+                
+                // Formantes vocais para som humano realista
+                const formant1 = 800 + Math.sin(t * 12) * 200; // Primeira formante
+                const formant2 = 1200 + Math.sin(t * 18) * 300; // Segunda formante
+                const formant3 = 2400 + Math.sin(t * 25) * 400; // Terceira formante
+                
+                // Gerar ondas com harmônicos
+                let sample = 0;
+                
+                // Fundamental
+                sample += Math.sin(2 * Math.PI * baseFreq * t) * 0.4;
+                
+                // Harmônicos para voz humana
+                sample += Math.sin(2 * Math.PI * baseFreq * 2 * t) * 0.2;
+                sample += Math.sin(2 * Math.PI * baseFreq * 3 * t) * 0.1;
+                sample += Math.sin(2 * Math.PI * baseFreq * 4 * t) * 0.05;
+                
+                // Formantes para som vocal
+                sample += Math.sin(2 * Math.PI * formant1 * t) * 0.15;
+                sample += Math.sin(2 * Math.PI * formant2 * t) * 0.1;
+                sample += Math.sin(2 * Math.PI * formant3 * t) * 0.05;
+                
+                // Envelope de amplitude (ataque rápido, sustain, decay)
+                let envelope;
+                if (t < 0.1) {
+                    envelope = t * 10; // Ataque rápido
+                } else if (t < 1.5) {
+                    envelope = 1; // Sustain
+                } else {
+                    envelope = Math.max(0, 1 - (t - 1.5) * 2); // Decay
+                }
+                
+                // Vibrato para tornar mais humano
+                const vibrato = 1 + Math.sin(t * 12) * 0.1;
+                
+                // Tremolo para simular tensão vocal
+                const tremolo = 1 + Math.sin(t * 30) * 0.2;
+                
+                // Distorção para simular cordas vocais tensas
+                sample = Math.tanh(sample * 2) * 0.7;
+                
+                data[i] = sample * envelope * vibrato * tremolo;
+            }
+            
+            return buffer;
+        }
+        
+        function playRealScream() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const buffer = createRealScream();
+                const source = audioContext.createBufferSource();
+                const gainNode = audioContext.createGain();
+                const filterNode = audioContext.createBiquadFilter();
+                
+                // Configurar filtro para realçar frequências vocais
+                filterNode.type = 'bandpass';
+                filterNode.frequency.value = 1000;
+                filterNode.Q.value = 2;
+                
+                source.buffer = buffer;
+                source.connect(filterNode);
+                filterNode.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Volume alto para o susto
+                gainNode.gain.value = 0.9;
+                
+                source.start();
+            } catch (error) {
+                console.log('Erro ao reproduzir som:', error);
+            }
+        }
+        
+        function triggerJumpscare() {
+            const overlay = document.getElementById('jumpscareOverlay');
+            
+            // Mostrar jumpscare
+            overlay.style.display = 'flex';
+            
+            // Tentar entrar em tela cheia
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log('Fullscreen não suportado:', err);
+                });
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
+            }
+            
+            // Tocar grito REAL
+            playRealScream();
+            
+            // Esconder jumpscare após 3 segundos
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                // Sair da tela cheia
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().catch(err => {
+                        console.log('Erro ao sair da tela cheia:', err);
+                    });
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }, 3000);
+        }
+        
+        // Permitir sair do jumpscare clicando ou pressionando ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.getElementById('jumpscareOverlay').style.display = 'none';
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().catch(err => {
+                        console.log('Erro ao sair da tela cheia:', err);
+                    });
+                }
+            }
+        });
+        
+        document.getElementById('jumpscareOverlay').addEventListener('click', function() {
+            this.style.display = 'none';
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(err => {
+                    console.log('Erro ao sair da tela cheia:', err);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
